@@ -1,24 +1,30 @@
-/*Please add citations for cin.ignore()
- * for list of 10,000 words from MIT
- * for list of most common words
- * Zybooks 9.5
+/* Citations
+ * cin.ignore() https://cplusplus.com/forum/beginner/173682/ Reply by Peter87,
+ * follow up with https://www.geeksforgeeks.org/cpp/cin-ignore-function-in-cpp/ confirms how to use cin.ignore()
+ *
+ * MIT.txt created with https://www.mit.edu/~ecprice/wordlist.10000
+ *
+ * Zybooks 9.5 used for help with file input
+ *
+ * Note: Test code was removed
  */
+
 
 #include <string>
 #include <vector>
 #include <iostream>
 #include <cctype>
-#include <fstream> //Zybooks 9.5 File input
+#include <fstream> //Zybooks 9.5 cited above
 
 using namespace std;
 
 int main() {
     //Obtaining the key
     ifstream dataFS; //filestream creation
-    dataFS.open("4.txt"); //opens fstream to read encrypted message
+    dataFS.open("4.txt"); //Opens fstream called dataFS to read encrypted message
 
-    string keyword; //temporary holder for keyword
-    vector<string> keywords; //builds vector of keywords
+    string keyword; //Temporary holder for keyword
+    vector<string> keywords; //Builds vector of keywords
 
     string encryptedMessage;
     vector<char> encryptedChar;
@@ -26,23 +32,17 @@ int main() {
     vector<int> alphabet(26); //Vector to hold frequencies
 
 
-    getline(dataFS, encryptedMessage); //fstream reads encrypted message maybe change if input is different
+    getline(dataFS, encryptedMessage); //dataFS inputs 4.txt into encryptedMessage
     dataFS.close();
     dataFS.clear();
 
     //Below is the logic for the frequency analysis
-    for (unsigned int i = 0; i < encryptedMessage.length(); i++) { //Encrypted message in 1 long string
+    // Encrypted message in 1 long string
+    for (unsigned int i = 0; i < encryptedMessage.length(); i++) {
         if (isalpha(encryptedMessage.at(i))) {
             encryptedChar.push_back(encryptedMessage.at(i));
         }
     }
-
-    //Prints encryptedChar
-    /*
-    for (unsigned int i = 0; i < encryptedChar.size(); i++) {
-        cout << encryptedChar.at(i);
-    }*/
-
 
     //Alphabet frequency holder
     for (unsigned int i = 0; i < alphabet.size(); i++) { //65 is A, 26 characters, range is 0-25
@@ -56,10 +56,12 @@ int main() {
 
 
     cout << "-------------------------Frequency Analysis of the Original Decrypted Message-------------------------" << endl;
-    for (unsigned int i = 0; i < alphabet.size(); i++) { //Frequency analysis report
+    //Frequency analysis report
+    for (unsigned int i = 0; i < alphabet.size(); i++) {
         cout <<static_cast<char>(i + 65) << ": " << alphabet.at(i) << "| ";
     }
-    cout << endl;
+    cout << endl << endl << endl;
+    cout << "Brute force output below ----------------------------------------------" << endl << endl;
 
     //Turning keys.txt into vector of keywords
     dataFS.open("keys.txt");
@@ -84,8 +86,8 @@ int main() {
     }
 
     //Brute force decryption of original statement OUTPUT
-    /*
     for (unsigned int i = 0; i < keywords.size(); i++) { //Iterate through list of keywords
+        cout << i <<") ";
         for (unsigned int j = 0; j < encryptedChar.size(); j++) { //Iterate through string in keywords AND in length of text
             if ((encryptedChar.at(j) - (keywords.at(i).at(j % keywords.at(i).length()))) < 0) {
                 cout << static_cast<char>((encryptedChar.at(j) - (keywords.at(i).at(j % keywords.at(i).length()))) + 91); //Underflow
@@ -95,15 +97,12 @@ int main() {
             //Encrypted - key = original
         }
         cout << endl << endl;
-    } */
+    }
+    cout << "End of brute force output-----------------------------------------------------------------------------";
 
-    //Top common english words to look for the match
-    // Approximately 48 words with some added like where when why
-    vector<string> commonWords = {"THE", "AND", "THAT", "HAVE", "FOR", "NOT", "WITH", "YOU", "BUT", "HIS", "HERE", "FROM", "THEY", "SAY", "HER", "SHE", "WILL", "ONE", "ALL", "WOULD", "THERE", "THEIR", "WHAT", "WHEN", "WHERE", "WHY", "WHICH"};
-    // go through all encrypted messages and see if there is the top english words
-
+    cout << endl << endl << "Please use your human eyes to look for the english looking phrase." << endl << endl;
     //Keyword
-    //cout << keywords.at(25) << endl;
+    cout << "The keyword is at 25 and is " << keywords.at(25) << " when you find english." << endl;
 
     //Decryption algorithm specifically for index 25 (REPAIR)
     for (unsigned int i = 0; i < encryptedChar.size(); i++) {
@@ -114,31 +113,18 @@ int main() {
         }
     }
 
-    //Print out of mashed character vector
-    /*
-    for (unsigned int i = 0; i < decryptedChar.size(); i++) {
-        cout << decryptedChar.at(i);
-    }
-    cout << endl;
-    */
-
-
-   	//Keyword Vector test with human eyes
-    /*for (unsigned int i = 0; i < keywords.size(); i++) {
-        cout << keywords.at(i) << endl;
-    } */
-
-
 
     /* SPACE MAKER
      * To avoid prefixes and cutting off suffixes from the list of 10,000 words,
      * we will process the sentence backwards which requires reverser code
      * This requires a backwards list of 10,000!
      *
-     * edit: Above was the initial plan, it turns out after further testing.. the spacing is weird because of suffixes and prefixes.
+     * edit: Above was the initial plan, it turns out after further testing.. the spacing is weird because of suffixes, prefixes and compound words.
      * New theory: Run the code once forwards and only include MIT words that are 4 characters in length. The intuition is that most prefixes are 3 letters in size.
-     * The spaces will be made behind the words _____________
-     * We can clean up multiple spaces later */
+     *
+     * edit edit: This also did not work. Plural "s" is removed. The intuition is there is likely more functions/set theory required in order to better separate a stream of characters into words
+        There may be redudant code from prior attempts. Our output is the best we could do without adding extra spaces that may confuse Bob i.e. pre tensions getting cut in half
+     */
     string mitWord;
     string reverseMITWord;
     string mitWordTemp;
@@ -147,12 +133,12 @@ int main() {
     vector<string> reverseMITWords;
     vector<char> reverseDecryptedChar;
 
-    //MITword looper
+    //MITword looper variables
     string comparedWordOne;
     vector<int> spacesOne;
     vector<char> sDecryptedCharOne; //Spaced Reverse Decrypted Char
 
-    //Modular(?) MIT word maker (add for (int i = 7; i > 5; i--))
+    //mitWord maker
     dataFS.open("MIT.txt");
     while (!dataFS.eof() && dataFS.good()) {
         dataFS >> mitWord;
@@ -179,54 +165,6 @@ int main() {
         mitWords.push_back(mitWordTemp);
     }
 
-
-    //MIT word checker
-    /*
-    for (unsigned int i = 0; i < mitWords.size(); i++) {
-        cout << mitWords.at(i) << " ";
-    } */
-
-
-    //space finder1 Forwards
-    /*
-    for (unsigned int i = 0; i < mitWords.size(); i++) {
-        comparedWordOne = mitWords.at(i);
-        for (unsigned int j = 0; j < decryptedChar.size(); j++) {
-            if (comparedWordOne.at(0) != decryptedChar.at(j)) {
-                continue;
-            } else {
-                for (unsigned int k = 0; k < comparedWordOne.length(); k++) {
-                    if (j + k == decryptedChar.size()) { //The MIT word might be compared is overflowing past the end of the message
-                        break;
-                    } else {
-                        if (comparedWordOne.at(k) != decryptedChar.at(j + k)) {
-                            break;
-                        } else if (comparedWordOne.at(k) == decryptedChar.at(j + k) && k == comparedWordOne.length() - 1) {
-                            spacesOne.push_back(j + k + 1); //j + k + 1 is where the space needs to be added
-                        }
-                    }
-                }
-            }
-        }
-    } */
-
-    //Adds spaces to the sDecryptedCharOne vector
-    /*
-    for (unsigned int i = 0; i < decryptedChar.size(); i++) {
-        for (unsigned int j = 0; j < spacesOne.size(); j++) {
-            if (i == spacesOne.at(j)) {
-                sDecryptedCharOne.push_back(' ');
-            }
-        }
-        sDecryptedCharOne.push_back(decryptedChar.at(i));
-    } */
-
-    //Prints sDecryptedCharOne
-    /*
-    for (unsigned int i = 0; i < decryptedChar.size(); i++) {
-        cout << sDecryptedCharOne.at(i);
-    } */
-
     //Word reverser
     for (unsigned int i = 0; i < mitWords.size(); i++) {
         reverseMITWord = "";
@@ -236,40 +174,10 @@ int main() {
         reverseMITWords.push_back(reverseMITWord);
     }
 
-
-    //MIT word reverser checker
-    /*
-    for (unsigned int i = 0; i < reverseMITWords.size(); i++) {
-        cout << reverseMITWords.at(i) << " ";
-    }*/
-
     //Decrypted message reverser
     for (int i = decryptedChar.size() - 1; i >= 0; i--) { //Has to be int since it will dip under 0
         reverseDecryptedChar.push_back(decryptedChar.at(i));
     }
-
-    //Reversed decrypted message test
-    /*
-    for (int i = 0; i < reverseDecryptedChar.size(); i++) {
-        cout << reverseDecryptedChar.at(i);
-    } */
-
-    /*
-    dataFS.open("MIT.txt");
-    while (!dataFS.eof() && dataFS.good()) {
-        dataFS >> mitWord;
-        if (mitWord.length() < 4) {
-            continue;
-        }
-        mitWords.push_back(mitWord);
-        if (dataFS.bad()){
-            cout << "Failed to input the MIT.txt";
-            break;
-        }
-    }
-    dataFS.close();
-    dataFS.clear();
-    */
 
     string comparedWord;
     vector<int> spaces;
@@ -298,12 +206,6 @@ int main() {
         }
     }
 
-    //Prints out where spaces will be added
-    /*
-    for (unsigned int i = 0; i < spaces.size(); i++){
-        cout << spaces.at(i) << " ";
-    } */
-
 
     //Adds spaces to the reverseDecryptedChar vector
     for (unsigned int i = 0; i < reverseDecryptedChar.size(); i++) {
@@ -315,12 +217,6 @@ int main() {
         sRDC.push_back(reverseDecryptedChar.at(i));
     }
 
-    //Prints the reversedDecryptedChar Vector with spaces
-    /*
-    for (unsigned int i = 0; i < sRDC.size(); i++) {
-        cout << sRDC.at(i);
-    } */
-
     //Creates decrypted message with spaces
     string spaceDecryptedString;
     for (int i = sRDC.size() - 1; i >= 0; i--) { //Has to be int since it will dip under 0
@@ -331,6 +227,23 @@ int main() {
     cout << endl << "Unfortunately, we ask you to add spaces as needed below while we work on this feature :(" << endl << endl << "-------------------Please double check with your human eyes below-------------------------";
     cout << endl << spaceDecryptedString << "\n\n\n";
 
+    cout << "The correct text with spaces added by a human is as follows: " << "THE ANALYTICAL ENGINE HAS NO PRETENSIONS WHATEVER TO ORIGINATE ANYTHING IT CAN DO WHATEVER";
+    cout << " WE KNOW HOW TO ORDER IT TO PERFORM IT CAN FOLLOW ANALYSIS BUT IT HAS NO POWER OF ANTICIPATING ANY ANALYTICAL RELATIONS OR TRUTHS ITS PROVINCE IS TO ASSIST US IN MAKING AVAILABLE WHAT WE ARE ALREADY ACQUAINTED WITH THE ANALYTICAL ENGINE WEAVES ALGEBRAIC PATTERNS JUST AS THE JACQUARD LOOM WEAVES FLOWERS AND LEAVES" << "\n\n\n";
+
+    ifstream answerFS;
+    string adaAnswer;
+    answerFS.open("adaQuote.txt");
+    while (!answerFS.eof() && answerFS.good()) {
+        getline(answerFS, adaAnswer);
+        cout << adaAnswer;
+        if (dataFS.bad()){
+            cout << "Failed to input the MIT.txt";
+            break;
+        }
+    }
+
+    cout << endl << "-----------------------------------------------------------------------------" << endl;
+
 
     //User varaiables
     string user;
@@ -339,6 +252,10 @@ int main() {
     //Alice variables
     string newMessage;
     char answer;
+    vector<char> outgoingMessageChar;
+    string defaultKey = "PNEUMONOULTRAMICROSCOPICSILICOVOLCANOCONIOSIS";
+    char encryptedCharHolder;
+    string encryptedOutgoingMessage;
 
     //Bob variables
     string key;
@@ -352,6 +269,7 @@ int main() {
 
 
 
+
     while (quit != 'y') {
         cout << "-------------------Booting up login sequence-------------------------\n" << "Are you Alice, Bob, or Eve? ";
         getline(cin, user);
@@ -362,73 +280,60 @@ int main() {
         }
         cout << "Welcome, " << user << "!\n\n";
 
-        //Decryption, message sender
         if (user == "Alice") {
             cout << "Okay, what is your message? ";
             getline(cin, newMessage);
-            cout << "\"" << newMessage << "\"" << "| Is this the correct message to send? (y/n) ";
+
+            cout << "-----------------------------------------------------------------------------";
+
+            cout << "\n\"" << newMessage << "\"" << "| Is this the correct message to send? (y/n) ";
 
             cin >> answer;
             while (tolower(answer) != 'y') {
                 cin.ignore(); //cin.ignore() citation
                 cout << "Please enter the correct message, " << user << ". ";
                 getline(cin, newMessage);
-                cout <<"\"" << newMessage << "\"" <<"| Is this the message you want to send? (y/n) ";
+                cout <<"\n\"" << newMessage << "\"" <<"| Is this the message you want to send? (y/n) ";
                 cin >> answer;
             }
 
+            //Vector of characters maker and capitalization
             for (unsigned int i = 0; i < newMessage.length(); i++) {
-                if (newMessage.at(i) != ' ') {
-                    encryptedMessage.push_back(newMessage.at(i));
+                if (newMessage.at(i) == ' ') {
+                    continue;
+
+                } else {
+                    outgoingMessageChar.push_back(toupper(newMessage.at(i)));
                 }
             }
 
-            /* Vector of characters checker
-            for (unsigned int i = 0; i < encryptedMessage.size(); i++) {
-                cout << encryptedMessage.at(i);
+            //Vector of characters checker
+            /*
+            for (unsigned int i = 0; i < outgoingMessageChar.size(); i++) {
+                cout << outgoingMessageChar.at(i);
             } */
+//------------- code above okay
+            //Default Encryption algorithm - below
 
-            //Encryption algorithm JUSTIN code
-            string inputText;
-            vector<char> plainText;
-            char encryptedText;
-            vector<char> cipherText;
-
-
-            cout << "Plaintext: " << endl;
-            getline(cin, inputText);
-
-            for (unsigned int k = 0; k < inputText.length(); k++) {
-                    plainText.push_back(toupper(inputText.at(k)));
+            for (unsigned int i = 0; i < outgoingMessageChar.size(); i++) {
+                if (outgoingMessageChar.at(i) != ' ') {
+                    encryptedCharHolder = (((outgoingMessageChar.at(i) + defaultKey.at(i % 45)) % 26) +65);
+                    encryptedOutgoingMessage.push_back(encryptedCharHolder);
+                }
             }
 
-            string key = "PNEUMONOULTRAMICROSCOPICSILICOVOLCANOCONIOSIS";
+            cout << "-----------------------------------------------------------------------------" << endl;
 
-            for (unsigned int i = 0; i < plainText.size(); i++) {
-                // check if character is alphabetical
-                // shift using longest word
-                // shift by 'A' to shift to ASCII values of alphabet
-                if (isalpha(plainText.at(i))) {
-                    if (isupper(plainText.at(i))) {
-                        cipherText.at(i) = ((plainText.at(i) - 'A') + key.length()) % 26 + 'A';
-                        cipherText.push_back(cipherText.at(i));
-                    }
-                }
-                else {
-                        // for non-alphabetic characters, don't shift with key
-                        cipherText.at(i) = plainText.at(i);
-                    }
-                }
-
-            cout << cipherText.size();
-
-            for (unsigned int p = 0; p < cipherText.size(); p++) {
-                cout << cipherText.at(p);
+            cout << "This is your encrypted message: \n";
+            for (unsigned int i = 0; i <encryptedOutgoingMessage.size(); i++) {
+                cout << encryptedOutgoingMessage.at(i);
             }
 
+            cout << endl;
 
 
 
+//------------------------------------------------------------------Bob
         } else if (user == "Bob") {
             cout << user << ", What is the message you would like to decrypt? ";
             getline(cin, incomingMessage);
@@ -512,7 +417,6 @@ int main() {
                 cout << rDMC.at(i);
             } */
 
-            //fix me?
             for (unsigned int i = 0; i < rDMC.size(); i++) {
                 for (unsigned int j = 0; j < bobSpaces.size(); j++) {
                     if (i == bobSpaces.at(j)) {
@@ -535,7 +439,7 @@ int main() {
 
             cout << endl << endl << "Unfortunately, we ask you to add spaces as needed below while we work on this feature :(" << endl <<"-------------------------Please double check with your human eyes-------------------------" << endl;
             cout << spaceDecryptedMessage << endl;
-
+//-------------------------------------------------------------------- EVE
         } else if (user == "Eve") {
             quit = 'y';
             cout << "Shouldn't you speak to Adam? Stop trying to intercept messages. There are no secret messages here.\n";
